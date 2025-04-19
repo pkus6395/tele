@@ -4,25 +4,25 @@ from datetime import datetime
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
-# ใส่ Token บอท
+# ใส่ Bot Token ที่ได้จาก @BotFather
 TOKEN = '7918608396:AAE3lYhme_BCHaubuS9iBIgum2kWCRwAdNs'
 
 # ตั้งค่าบอท
 app = ApplicationBuilder().token(TOKEN).build()
 
-# ตั้งชื่อกลุ่ม
+# ตั้งชื่อกลุ่ม (แบบ public) ที่จะยิงข้อความ
 group_usernames = [
-    '-1002533946981'
+    '-1002533946981'   # ใส่ชื่อกลุ่มที่ตั้ง Public ไว้
 ]
 
-# ข้อความสุ่ม
+# ข้อความที่สุ่มยิง
 messages = [
-    "🔥 โปรโมชั่นมาใหม่ แจกหนัก!",
-    "🎯 สล็อตแตกง่าย 2025 กำลังมาแรง!",
-    "🏆 คาสิโนสด บริการระดับพรีเมียม!",
+    "🔥 โปรโมชั่นใหม่! สมัครรับโบนัสทันที!",
+    "🎯 คาสิโนสด ฝากถอนไว ไม่ง้อเอเย่นต์!",
+    "🎰 สล็อตแตกง่าย 2025 เล่นได้ทุกวัน!",
 ]
 
-# ชั่วโมงที่จะยิงข้อความ
+# กำหนดชั่วโมงที่จะยิงโพสต์
 post_hours = [10, 14, 20]
 
 # ฟังก์ชันตอบ /start
@@ -48,7 +48,7 @@ async def reply_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ฟังก์ชันยิงข้อความสุ่ม
 async def auto_post():
-    await asyncio.sleep(5)  # รอให้ทุกอย่างเริ่มทำงานก่อน
+    await app.start()
     while True:
         current_hour = datetime.now().hour
         if current_hour in post_hours:
@@ -61,24 +61,16 @@ async def auto_post():
             except Exception as e:
                 print(f"❌ ยิงไม่สำเร็จ: {e}")
 
-            await asyncio.sleep(3700)
+            await asyncio.sleep(3700)  # รอ 1 ชม.
         else:
-            await asyncio.sleep(600)
+            await asyncio.sleep(600)  # เช็กทุก ๆ 10 นาที
 
-# ฟังก์ชันหลัก
-async def main():
-    # ผูก Handler
-    app.add_handler(CommandHandler('start', start))
-    app.add_handler(MessageHandler(filters.TEXT, reply_message))
+# ผูก Handler
+app.add_handler(CommandHandler('start', start))
+app.add_handler(MessageHandler(filters.TEXT, reply_message))
 
-    # เริ่ม Task ยิงข้อความอัตโนมัติ
-    asyncio.create_task(auto_post())
-
-    # รันบอท (Polling)
-    await app.run_polling()
-
-# เริ่มรัน
+# ฟังก์ชันรันพร้อมกัน
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    loop.create_task(main())  # ไม่ใช้ asyncio.run()
-    loop.run_forever()         # ให้ Loop วิ่งตลอด
+    loop.create_task(auto_post())  # ยิงข้อความอัตโนมัติ
+    app.run_polling()              # ฟังคำสั่ง /start
