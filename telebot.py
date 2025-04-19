@@ -38,9 +38,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def reply_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     if "สมัคร" in text:
-        await update.message.reply_text("✅ สมัครสมาชิกได้ที่ [คลิกที่นี่](https://casino168.link/signup)", parse_mode='Markdown')
+        await update.message.reply_text("✅ สมัครสมาชิกได้ที่ [คลิกที่นี่](https://play.ufa11k.co/signup?ref=aGWZqV)", parse_mode='Markdown')
     elif "โปร" in text:
-        await update.message.reply_text("🎁 ดูโปรโมชันล่าสุดได้ที่ [โปรโมชันคาสิโน](https://casino168.link/promotion)", parse_mode='Markdown')
+        await update.message.reply_text("🎁 ดูโปรโมชันล่าสุดได้ที่ [โปรโมชันคาสิโน](https://play.ufa11k.co/signup?ref=aGWZqV)", parse_mode='Markdown')
     elif "ติดต่อ" in text:
         await update.message.reply_text("🛠 ติดต่อแอดมินได้ที่ @Casino168_Support", parse_mode='Markdown')
     else:
