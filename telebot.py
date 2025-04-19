@@ -5,14 +5,14 @@ from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
 # BOT Token
-bot_token = 'ใส่-Token-จริงๆ-ที่ได้จาก-BotFather'
+bot_token = '7918608396:AAE3lYhme_BCHaubuS9iBIgum2kWCRwAdNs'
 
 # ตั้งค่าบอท
 app = ApplicationBuilder().token(bot_token).build()
 
 # Group ID ที่จะยิงข้อความเข้า
 group_ids = [
-    '-100850576325',  # ตัวอย่าง Group ID
+    '-100850576402'  # ตัวอย่าง Group ID
 ]
 
 # ข้อความที่ใช้สุ่มยิง
@@ -23,11 +23,11 @@ messages = [
     "🎯 คาสิโนสด เล่นง่าย ได้เงินจริง พร้อมสูตรแจกฟรี!",
 ]
 
-# ชั่วโมงที่ต้องการให้ยิงข้อความ (โพสต์ 10 โมง, 14 โมง, 20 โมง)
+# ชั่วโมงที่ต้องการให้ยิงข้อความ
 post_hours = [10, 14, 20]
 
 # ===============================
-# ฟังก์ชันตอบกลับ /start
+# ฟังก์ชันตอบ /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [["🔥 สมัครสมาชิก", "🎁 ดูโปรโมชันล่าสุด"], ["🛠 ติดต่อทีมงาน"]]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
@@ -80,12 +80,17 @@ app.add_handler(CommandHandler('start', start))
 app.add_handler(MessageHandler(filters.TEXT, reply_message))
 
 # ===============================
-# ฟังก์ชันรันพร้อมกัน (Polling + Auto Post)
-async def main():
-    task1 = asyncio.create_task(app.run_polling())
-    task2 = asyncio.create_task(auto_post())
-    await asyncio.gather(task1, task2)
+# ฟังก์ชันหลัก
+async def run_bot():
+    # Start Polling
+    polling_task = asyncio.create_task(app.run_polling())
+    # Start Auto Posting
+    auto_post_task = asyncio.create_task(auto_post())
+    # รันพร้อมกัน
+    await asyncio.gather(polling_task, auto_post_task)
 
-# เริ่มรัน
+# ===============================
+# เริ่มทำงาน
 if __name__ == '__main__':
-    asyncio.run(main())
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(run_bot())
