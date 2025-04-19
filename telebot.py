@@ -12,7 +12,7 @@ app = ApplicationBuilder().token(bot_token).build()
 
 # Group ID ที่จะยิงข้อความเข้า
 group_ids = [
-    '-1007950882030',  # ตัวอย่าง Group ID
+    '-100850576325',  # ตัวอย่าง Group ID
 ]
 
 # ข้อความที่ใช้สุ่มยิง
