@@ -5,7 +5,7 @@ from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
 # ใส่ Bot Token ที่ได้จาก @BotFather
-TOKEN = '7918608396:AAE3lYhme_BCHaubuS9iBIgum2kWCRwAdNs'
+TOKEN = '7918608396:AAG_e0h8qDD7IglKUFanyvC9UwKo8kiDqmE'
 
 # ตั้งค่าบอท
 app = ApplicationBuilder().token(TOKEN).build()
