@@ -1,29 +1,20 @@
-import asyncio
-import random
-from datetime import datetime
-from telegram import Update, ReplyKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
-# ใส่ Bot Token ที่ได้จาก @BotFather
+from telegram import Update, ReplyKeyboardMarkup
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
+import random
+
+# TOKEN Bot
 TOKEN = '7918608396:AAE3lYhme_BCHaubuS9iBIgum2kWCRwAdNs'
 
-# ตั้งค่าบอท
-app = ApplicationBuilder().token(TOKEN).build()
-
-# ตั้งชื่อกลุ่ม (แบบ public) ที่จะยิงข้อความ
-group_usernames = [
-    '-1002533946981'   # ใส่ชื่อกลุ่มที่ตั้ง Public ไว้
-]
+# กลุ่มหรือแชทที่จะยิง
+TARGET_CHAT_ID = '-1002533946981'  # หรือใช้ @groupname ก็ได้
 
 # ข้อความที่สุ่มยิง
 messages = [
-    "🔥 โปรโมชั่นใหม่! สมัครรับโบนัสทันที!",
-    "🎯 คาสิโนสด ฝากถอนไว ไม่ง้อเอเย่นต์!",
-    "🎰 สล็อตแตกง่าย 2025 เล่นได้ทุกวัน!",
+    "🔥 โปรโมชั่นมาใหม่ แจกหนัก!",
+    "🎯 สล็อตแตกง่าย 2025 กำลังมาแรง!",
+    "🏆 คาสิโนสด บริการระดับพรีเมียม!",
 ]
-
-# กำหนดชั่วโมงที่จะยิงโพสต์
-post_hours = [10, 14, 20]
 
 # ฟังก์ชันตอบ /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -47,30 +38,22 @@ async def reply_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("❓ กรุณาเลือกเมนูจากปุ่ม หรือพิมพ์ใหม่อีกครั้งครับ!")
 
 # ฟังก์ชันยิงข้อความสุ่ม
-async def auto_post():
-    await app.start()
-    while True:
-        current_hour = datetime.now().hour
-        if current_hour in post_hours:
-            selected_message = random.choice(messages)
-            selected_group = random.choice(group_usernames)
+async def send_random_message(context: ContextTypes.DEFAULT_TYPE):
+    message = random.choice(messages)
+    try:
+        await context.bot.send_message(chat_id=TARGET_CHAT_ID, text=message, parse_mode='HTML')
+        print(f"✅ ยิงข้อความสำเร็จ: {message}")
+    except Exception as e:
+        print(f"❌ ยิงข้อความล้มเหลว: {e}")
 
-            try:
-                await app.bot.send_message(chat_id=selected_group, text=selected_message, parse_mode='HTML')
-                print(f"✅ ยิงข้อความ: {selected_message} ไปที่ {selected_group}")
-            except Exception as e:
-                print(f"❌ ยิงไม่สำเร็จ: {e}")
-
-            await asyncio.sleep(3700)  # รอ 1 ชม.
-        else:
-            await asyncio.sleep(600)  # เช็กทุก ๆ 10 นาที
-
-# ผูก Handler
-app.add_handler(CommandHandler('start', start))
-app.add_handler(MessageHandler(filters.TEXT, reply_message))
-
-# ฟังก์ชันรันพร้อมกัน
+# เริ่มทำงาน
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.create_task(auto_post())  # ยิงข้อความอัตโนมัติ
-    app.run_polling()              # ฟังคำสั่ง /start
+    app = ApplicationBuilder().token(TOKEN).build()
+
+    app.add_handler(CommandHandler('start', start))
+    app.add_handler(MessageHandler(filters.TEXT, reply_message))
+
+    job_queue = app.job_queue
+    job_queue.run_repeating(send_random_message, interval=3600, first=10)
+
+    app.run_polling()
