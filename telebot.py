@@ -12,7 +12,7 @@ app = ApplicationBuilder().token(TOKEN).build()
 
 # ตั้งชื่อกลุ่ม (แบบ public) ที่จะยิงข้อความ
 group_usernames = [
-    '@slotsociety2025',   # ใส่ชื่อกลุ่มที่ตั้ง Public ไว้
+    '-1002533946981',   # ใส่ชื่อกลุ่มที่ตั้ง Public ไว้
 ]
 
 # ข้อความที่สุ่มยิง
