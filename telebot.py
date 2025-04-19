@@ -42,7 +42,7 @@ async def reply_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif "โปร" in text:
         await update.message.reply_text("🎁 ดูโปรโมชันล่าสุดได้ที่ [โปรโมชันคาสิโน](https://play.ufa11k.co/signup?ref=aGWZqV)", parse_mode='Markdown')
     elif "ติดต่อ" in text:
-        await update.message.reply_text("🛠 ติดต่อแอดมินได้ที่ (https://play.ufa11k.co/signup?ref=aGWZqV)", parse_mode='Markdown')
+        await update.message.reply_text("🛠 ติดต่อแอดมินได้ที่ [คลิกที่นี่](https://play.ufa11k.co/signup?ref=aGWZqV)", parse_mode='Markdown')
     else:
         await update.message.reply_text("❓ กรุณาเลือกเมนูจากปุ่ม หรือพิมพ์ใหม่อีกครั้งครับ!")
 
