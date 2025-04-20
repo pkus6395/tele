@@ -4,7 +4,7 @@ from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 
 # Bot Token
-TOKEN = '7918608396:AAG_e0h8qDD7IglKUFanyvC9UwKo8kiDqmE'
+TOKEN = '7918608396:AAHunKDouPqGXYC4EGHrUqG09vKjw4IoqwQ'
 
 # กลุ่มยิงข้อความ
 group_usernames = [
