@@ -1,40 +1,76 @@
 import asyncio
 import random
-from telegram import Bot
 from datetime import datetime
+from telegram import Update, ReplyKeyboardMarkup
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
-# TOKEN Bot
-TOKEN = '7918608396:AAG_e0h8qDD7IglKUFanyvC9UwKo8kiDqmE'
+# ใส่ Bot Token ที่ได้จาก @BotFather
+TOKEN = '7918608396:AAE3lYhme_BCHaubuS9iBIgum2kWCRwAdNs'
 
-# ID ของกลุ่ม หรือ @username
-TARGET_CHAT_ID = '-1002533946981'
+# ตั้งค่าบอท
+app = ApplicationBuilder().token(TOKEN).build()
+
+# ตั้งชื่อกลุ่ม (แบบ public) ที่จะยิงข้อความ
+group_usernames = [
+    '-1002533946981'   # ใส่ชื่อกลุ่มที่ตั้ง Public ไว้
+]
 
 # ข้อความที่สุ่มยิง
 messages = [
-    "🔥 โปรโมชั่นมาใหม่!",
-    "🎰 สล็อตแตกง่ายทุกวัน!",
-    "🏆 คาสิโนสดระดับโลก!",
+    "🔥 โปรโมชั่นใหม่! สมัครรับโบนัสทันที!",
+    "🎯 คาสิโนสด ฝากถอนไว ไม่ง้อเอเย่นต์!",
+    "🎰 สล็อตแตกง่าย 2025 เล่นได้ทุกวัน!",
 ]
 
-# เวลาที่ยิงโพสต์ (ชั่วโมง)
-post_hours = [10, 14, 20]  # 10 โมง, 14 โมง, 2 ทุ่ม
+# กำหนดชั่วโมงที่จะยิงโพสต์
+post_hours = [10, 14, 20]
 
-async def send_post():
-    bot = Bot(token=TOKEN)
+# ฟังก์ชันตอบ /start
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [["🎯 สมัคร", "🎁 โปรโมชั่น"], ["🛠 ติดต่อแอดมิน"]]
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+    await update.message.reply_text(
+        "✅ ยินดีต้อนรับสู่ Casino168!\nเลือกเมนูที่คุณต้องการได้เลย 👇",
+        reply_markup=reply_markup
+    )
 
+# ฟังก์ชันตอบข้อความทั่วไป
+async def reply_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text
+    if "สมัคร" in text:
+        await update.message.reply_text("✅ สมัครสมาชิกได้ที่ [คลิกที่นี่](https://play.ufa11k.co/signup?ref=aGWZqV)", parse_mode='Markdown')
+    elif "โปร" in text:
+        await update.message.reply_text("🎁 ดูโปรโมชันล่าสุดได้ที่ [โปรโมชันคาสิโน](https://play.ufa11k.co/signup?ref=aGWZqV)", parse_mode='Markdown')
+    elif "ติดต่อ" in text:
+        await update.message.reply_text("🛠 ติดต่อแอดมินได้ที่ @Casino168_Support", parse_mode='Markdown')
+    else:
+        await update.message.reply_text("❓ กรุณาเลือกเมนูจากปุ่ม หรือพิมพ์ใหม่อีกครั้งครับ!")
+
+# ฟังก์ชันยิงข้อความสุ่ม
+async def auto_post():
+    await app.start()
     while True:
-        now = datetime.now()
-        if now.hour in post_hours:
-            message = random.choice(messages)
+        current_hour = datetime.now().hour
+        if current_hour in post_hours:
+            selected_message = random.choice(messages)
+            selected_group = random.choice(group_usernames)
+
             try:
-                await bot.send_message(chat_id=TARGET_CHAT_ID, text=message, parse_mode='HTML')
-                print(f"✅ ยิงข้อความสำเร็จ: {message}")
+                await app.bot.send_message(chat_id=selected_group, text=selected_message, parse_mode='HTML')
+                print(f"✅ ยิงข้อความ: {selected_message} ไปที่ {selected_group}")
             except Exception as e:
-                print(f"❌ ยิงล้มเหลว: {e}")
+                print(f"❌ ยิงไม่สำเร็จ: {e}")
 
-            await asyncio.sleep(3700)  # รอประมาณ 1 ชม. ก่อนยิงใหม่
+            await asyncio.sleep(3700)  # รอ 1 ชม.
         else:
-            await asyncio.sleep(600)  # รอ 10 นาทีเช็กอีกที
+            await asyncio.sleep(600)  # เช็กทุก ๆ 10 นาที
 
-if __name__ == "__main__":
-    asyncio.run(send_post())
+# ผูก Handler
+app.add_handler(CommandHandler('start', start))
+app.add_handler(MessageHandler(filters.TEXT, reply_message))
+
+# ฟังก์ชันรันพร้อมกัน
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.create_task(auto_post())  # ยิงข้อความอัตโนมัติ
+    app.run_polling()              # ฟังคำสั่ง /start
