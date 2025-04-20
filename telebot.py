@@ -34,11 +34,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def reply_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     if "สมัคร" in text:
-        await update.message.reply_text("✅ สมัครสมาชิกได้ที่ [คลิกที่นี่](https://play.ufa11k.co/signup?ref=aGWZqV)", parse_mode='Markdown')
+        await update.message.reply_text('✅ สมัครสมาชิกได้ที่ <a href="https://play.ufa11k.co/signup?ref=aGWZqV">คลิกที่นี่</a>', parse_mode='HTML')
     elif "โปร" in text:
-        await update.message.reply_text("🎁 ดูโปรโมชันล่าสุดได้ที่ [โปรโมชันคาสิโน](https://play.ufa11k.co/signup?ref=aGWZqV)", parse_mode='Markdown')
+        await update.message.reply_text('🎁 ดูโปรโมชันล่าสุดได้ที่ <a href="https://play.ufa11k.co/signup?ref=aGWZqV">โปรโมชันคาสิโน</a>', parse_mode='HTML')
     elif "ติดต่อ" in text:
-        await update.message.reply_text("🛠 ติดต่อแอดมินได้ที่ @Casino168_Support", parse_mode='Markdown')
+        await update.message.reply_text("🛠 ติดต่อแอดมินได้ที่ @Casino168_Support")
     else:
         await update.message.reply_text("❓ กรุณาเลือกเมนูจากปุ่ม หรือพิมพ์ใหม่อีกครั้งครับ!")
 
@@ -61,7 +61,7 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler('start', start))
     app.add_handler(MessageHandler(filters.TEXT, reply_message))
 
-    # ใช้ JobQueue ยิงข้อความซ้ำทุก 1 นาที แล้วไปเช็กว่าจะยิงจริงไหม
+    # ยิงข้อความทุก 1 นาที และเช็กว่าตรงเวลาที่ต้องยิงไหม
     app.job_queue.run_repeating(send_random_message, interval=60, first=10)
 
     app.run_polling()
