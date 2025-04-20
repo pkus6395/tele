@@ -23,7 +23,7 @@ post_hours = [10, 14, 20]
 
 # ฟังก์ชันตอบ /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    keyboard = [["🎯 สมัคร", "🎁 โปรโมชั่น"], ["🛠 ติดต่อแอดมิน"]]
+    keyboard = [["🎯 สมัคร", "🎁 โปรโมชั่น","ฝาก","ถอน"], ["🛠 ติดต่อแอดมิน"]]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     await update.message.reply_text(
         "✅ ยินดีต้อนรับสู่ Casino168!\nเลือกเมนูที่คุณต้องการได้เลย 👇",
@@ -39,6 +39,10 @@ async def reply_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text('🎁 ดูโปรโมชันล่าสุดได้ที่ <a href="https://play.ufa11k.co/signup?ref=aGWZqV">โปรโมชันคาสิโน</a>', parse_mode='HTML')
     elif "ติดต่อ" in text:
         await update.message.reply_text("🛠 ติดต่อแอดมินได้ที่ @Casino168_Support")
+         elif "ฝาก" in text:
+        await update.message.reply_text("🛠 ฝากหน้าเว็บได้เลยคะ")
+     elif "ถอน" in text:
+        await update.message.reply_text("🛠 ขออภัยคะ เว็บเราบิดอย่างเดียวคะ")
     else:
         await update.message.reply_text("❓ กรุณาเลือกเมนูจากปุ่ม หรือพิมพ์ใหม่อีกครั้งครับ!")
 
